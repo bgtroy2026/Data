@@ -182,10 +182,10 @@ canvas{width:100%!important;display:block}
 <div class="shell">
 <div class="sidebar">
 
-  <div><div class="fl">Time Period</div>
+  <div><div class="fl">Trend Period <span style="font-weight:500;opacity:.6;font-size:8px">· KPIs only</span></div>
   <div class="pp" id="ppEl"></div></div>
 
-  <div><div class="fl">Markets (multi-select)</div>
+  <div><div class="fl">Markets <span style="font-weight:500;opacity:.6;font-size:8px">· KPI totals</span></div>
   <div class="ml" id="mlEl"></div></div>
 
   <div><div class="fl">Beer Segment</div>
@@ -210,8 +210,28 @@ canvas{width:100%!important;display:block}
 
   <!-- BRAND -->
   <div class="vp on" id="view-brand">
-    <div class="sh"><div class="sh-title">Brand Rankings — Iowa Conv / Craft</div>
-    <div class="sh-note" id="brandNote">Latest 13 Wks · Big Grove highlighted</div></div>
+
+    <!-- BGB BRAND CARDS (primary data) -->
+    <div style="background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:14px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="color:#fff;font-size:15px;font-weight:800">Big Grove — Brand Performance</div>
+          <div style="color:rgba(255,255,255,.5);font-size:10px;margin-top:2px">Iowa Conv · Craft · Latest 13 Wks · All 16 brands ranked by market $</div>
+        </div>
+        <div id="bgbTotalLbl" style="background:rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;color:#fff;font-size:12px;font-weight:700;white-space:nowrap"></div>
+      </div>
+      <div id="periodBanner" style="margin-top:12px;padding:8px 12px;background:rgba(255,255,255,.08);border-radius:8px;font-size:11px;color:rgba(255,255,255,.8);display:none"></div>
+    </div>
+    <div id="bgbCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px;margin-bottom:24px"></div>
+
+    <!-- COMPETITIVE TABLE -->
+    <div class="sh" style="margin-bottom:8px">
+      <div class="sh-title">Iowa Conv Competitive Rankings</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="background:#eef0f8;color:var(--muted);font-size:9.5px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.3px">Iowa Conv · Craft · Latest 13 Wks</span>
+        <span class="sh-note">BGB rows highlighted</span>
+      </div>
+    </div>
     <div class="srw"><span class="sr-ic">🔍</span>
     <input class="sri" id="bSearch" placeholder="Search brands…" oninput="renderBrands()"></div>
     <div class="tg" id="bTgl"></div>
@@ -287,6 +307,7 @@ const MARKETS = [{"market":"IOWA XAOC CENSUS (NC)","mkt_type":"Stateline","bgb_d
 const TRENDS  = [{"period":"Latest 4 Wks","mkt_vsya":-98383.0,"mkt_pctch":-0.13168418223919376,"bgb_vsya":-2147.070000000007,"bgb_pctch":-0.01357656019752973},{"period":"Latest 13 Wks","mkt_vsya":-297958.0700000017,"mkt_pctch":-0.1305089056830092,"bgb_vsya":12522.550000000047,"bgb_pctch":0.02642287594738746},{"period":"Latest 26 Wks","mkt_vsya":-467449.55000000075,"mkt_pctch":-0.11073727777882891,"bgb_vsya":37479.70000000007,"bgb_pctch":0.04360556602281096},{"period":"Latest 52 Wks","mkt_vsya":-979342.3200000031,"mkt_pctch":-0.10884609310703497,"bgb_vsya":74129.81000000006,"bgb_pctch":0.041486490798789966}];
 const SEGS    = [{"segment":"BELOW PREMIUM","mkt_dol":18688043.839999992,"mkt_dol_ya":19261636.540000007,"mkt_vsya":-573592.7000000142,"mkt_eq":800942.4899999999,"mkt_eq_ya":835370.4768999999,"mkt_acv":0.991078,"mkt_acv_ya":0.987021},{"segment":"DOMESTIC PREMIUM","mkt_dol":12834341.060000002,"mkt_dol_ya":14009180.520000003,"mkt_vsya":-1174839.460000001,"mkt_eq":432385.72,"mkt_eq_ya":481550.0767,"mkt_acv":0.889251,"mkt_acv_ya":0.917091},{"segment":"FLAVORED MALT BEVERAGE","mkt_dol":7969983.690000002,"mkt_dol_ya":9228877.520000003,"mkt_vsya":-1258893.830000001,"mkt_eq":194541.61999999994,"mkt_eq_ya":229250.21300000002,"mkt_acv":0.863136,"mkt_acv_ya":0.883146},{"segment":"IMPORT","mkt_dol":6815549.85,"mkt_dol_ya":7236516.159999998,"mkt_vsya":-420966.30999999866,"mkt_eq":172216.56999999995,"mkt_eq_ya":183851.23570000005,"mkt_acv":0.810933,"mkt_acv_ya":0.828874},{"segment":"DOMESTIC SUPER PREMIUM","mkt_dol":5555744.340000001,"mkt_dol_ya":5078509.570000001,"mkt_vsya":477234.76999999955,"mkt_eq":163351.21,"mkt_eq_ya":146119.4115,"mkt_acv":0.844131,"mkt_acv_ya":0.839426},{"segment":"HARD SELTZER","mkt_dol":2150833.8400000003,"mkt_dol_ya":2487531.460000001,"mkt_vsya":-336697.6200000006,"mkt_eq":49934.89999999998,"mkt_eq_ya":57112.53049999999,"mkt_acv":0.654945,"mkt_acv_ya":0.710467},{"segment":"CRAFT","mkt_dol":1985089.7299999986,"mkt_dol_ya":2283047.8000000003,"mkt_vsya":-297958.0700000017,"mkt_eq":42215.28000000003,"mkt_eq_ya":48844.55739999999,"mkt_acv":0.458634,"mkt_acv_ya":0.495946},{"segment":"MALT LIQUOR","mkt_dol":506809.43,"mkt_dol_ya":633105.9600000001,"mkt_vsya":-126296.53000000009,"mkt_eq":20073.290000000005,"mkt_eq_ya":26473.5407,"mkt_acv":0.4554,"mkt_acv_ya":0.416373},{"segment":"CIDER","mkt_dol":196631.4,"mkt_dol_ya":133396.3,"mkt_vsya":63235.100000000006,"mkt_eq":4152.73,"mkt_eq_ya":2856.6107000000006,"mkt_acv":0.348098,"mkt_acv_ya":0.339827}];
 const STYLES  = [{"style":"HAZY INDIA PALE ALE","bgb_dol":356347.42,"bgb_dol_ya":347562.48,"bgb_vsya":8784.940000000002,"bgb_eq":7067.3099999999995,"bgb_acv":0.458634},{"style":"AMERICAN WHEAT","bgb_dol":48662.240000000005,"bgb_dol_ya":74321.55999999998,"bgb_vsya":-25659.319999999978,"bgb_eq":1047.18,"bgb_acv":0.158695},{"style":"HAZY IMPERIAL/DBL/TRPL IPA","bgb_dol":37543.869999999995,"bgb_dol_ya":18438.69,"bgb_vsya":19105.179999999997,"bgb_eq":695.49,"bgb_acv":0.124638},{"style":"ASSORTED","bgb_dol":20249.2,"bgb_dol_ya":15504.52,"bgb_vsya":4744.68,"bgb_eq":423.0,"bgb_acv":0.045962},{"style":"AMERICAN LAGER","bgb_dol":15326.130000000001,"bgb_dol_ya":8340.76,"bgb_vsya":6985.370000000001,"bgb_eq":340.97,"bgb_acv":0.065761},{"style":"INDIA PALE ALE","bgb_dol":4487.32,"bgb_dol_ya":4632.33,"bgb_vsya":-145.01000000000022,"bgb_eq":90.78,"bgb_acv":0.006038},{"style":"AMERICAN PALE ALE","bgb_dol":3115.03,"bgb_dol_ya":4358.95,"bgb_vsya":-1243.9199999999996,"bgb_eq":62.25,"bgb_acv":0.008397},{"style":"BLONDE ALE/GOLDEN ALE","bgb_dol":635.76,"bgb_dol_ya":476.25,"bgb_vsya":159.51,"bgb_eq":13.29,"bgb_acv":0.002534},{"style":"SOUR/AMERICAN WILD ALE","bgb_dol":83.93,"bgb_dol_ya":292.81,"bgb_vsya":-208.88,"bgb_eq":1.17,"bgb_acv":0.000184}];
+const BGB_BRANDS = [{"rank":1,"brand":"BIG GROVE EASY EDDY IPA","dol":352208.33,"dol_ya":347229.80999999994,"vsya":4978.520000000077,"pct_vsya":0.014337824278393807,"share":17.742690654089486,"share_pts":2.533643782622347,"eq":6957.959999999999,"eq_ya":6885.4566,"eq_vsya":72.50339999999869,"price":50.61948185962553,"price_pct":0.0037682117757660283,"acv":45.8634,"acv_pts":1.6786999999999992,"stores":1070.04,"vel":7679.507624816303,"vel_pct":-0.02278914200880111,"dps":329.15435871556207,"promo_any":0.11287336673723758},{"rank":12,"brand":"BIG GROVE SURFER CITRUS","dol":47067.51,"dol_ya":72226.51999999999,"vsya":-25159.009999999987,"pct_vsya":-0.3483347944771531,"share":2.371052012847804,"share_pts":-0.7925488543788854,"eq":1010.6,"eq_ya":1546.2374,"eq_vsya":-535.6374,"price":46.57382742924995,"price_pct":-0.002939725847899921,"acv":15.8695,"acv_pts":-6.832399999999998,"stores":587.42,"vel":2965.910079082517,"vel_pct":-0.06776909611146442,"dps":80.1258213884444,"promo_any":0.005165771463160044},{"rank":16,"brand":"BIG GROVE ROYAL EDDY IPA","dol":36210.03999999999,"dol_ya":18438.69,"vsya":17771.349999999995,"pct_vsya":0.9638076240774152,"share":1.8241009186018013,"share_pts":1.0164660543646196,"eq":667.6800000000001,"eq_ya":351.0089,"eq_vsya":316.6711000000001,"price":54.23262640786004,"price_pct":0.03240168035440183,"acv":12.463799999999999,"acv_pts":6.711099999999999,"stores":326.15,"vel":2905.216707585166,"vel_pct":-0.09359937426546105,"dps":111.02265828606468,"promo_any":0.21624748274235547},{"rank":20,"brand":"BIG GROVE ASSORTED IPA","dol":20249.2,"dol_ya":15504.52,"vsya":4744.68,"pct_vsya":0.3060191479645935,"share":1.0200647201978128,"share_pts":0.34094972313117344,"eq":423.0,"eq_ya":332.5,"eq_vsya":90.5,"price":47.87044917257683,"price_pct":0.026598975645927503,"acv":4.5962000000000005,"acv_pts":0.8300000000000005,"stores":176.62,"vel":4405.639441277577,"vel_pct":0.07017303752322612,"dps":114.64839768995584,"promo_any":0.018430851589198584},{"rank":24,"brand":"BIG GROVE NEIGHBORHOOD LGR","dol":15326.130000000001,"dol_ya":8340.76,"vsya":6985.370000000001,"pct_vsya":0.8374980217630048,"share":0.7720623288902921,"share_pts":0.4067278842939072,"eq":340.97,"eq_ya":196.2557,"eq_vsya":144.71430000000004,"price":44.9486171803971,"price_pct":0.057628121270826504,"acv":6.5761,"acv_pts":3.6839000000000004,"stores":355.6,"vel":2330.58043521236,"vel_pct":-0.19185964651648202,"dps":43.09935320584927,"promo_any":0.1440729003342657},{"rank":41,"brand":"BIG GROVE WILD EDDY IPA","dol":4487.32,"dol_ya":461.64,"vsya":4025.68,"pct_vsya":8.720388181266788,"share":0.2260512425299789,"share_pts":0.20583090373549554,"eq":90.78,"eq_ya":9.0,"eq_vsya":81.78,"price":49.43071161048689,"price_pct":-0.036313134705870276,"acv":0.6038,"acv_pts":0.4086,"stores":55.18,"vel":7431.798608810864,"vel_pct":2.1424640162028434,"dps":81.32149329467198,"promo_any":0.0},{"rank":46,"brand":"BIG GROVE ZERO EDDY IPA","dol":3467.35,"dol_ya":0,"vsya":3467.35,"pct_vsya":0.0,"share":0.17466968609021025,"share_pts":0.17466968609021025,"eq":65.57,"eq_ya":0.0,"eq_vsya":65.57,"price":52.880128107366176,"price_pct":0.0,"acv":0.8765000000000001,"acv_pts":0.8765000000000001,"stores":53.18,"vel":3955.9041642897887,"vel_pct":0.0,"dps":65.20026325686348,"promo_any":0.0},{"rank":49,"brand":"BIG GROVE ARMS RACE PALE ALE","dol":3115.03,"dol_ya":4358.95,"vsya":-1243.9199999999996,"pct_vsya":-0.28537147707590127,"share":0.15692136999771808,"share_pts":-0.034005425315108556,"eq":62.25,"eq_ya":89.8061,"eq_vsya":-27.5561,"price":50.04064257028113,"price_pct":0.030971897069460352,"acv":0.8397,"acv_pts":-0.7882999999999999,"stores":19.0,"vel":3709.6939383113017,"vel_pct":0.38551296334456664,"dps":163.94894736842107,"promo_any":0.0},{"rank":60,"brand":"BIG GROVE CITRUS SURFER CITRUS","dol":1495.82,"dol_ya":2095.04,"vsya":-599.22,"pct_vsya":-0.28601840537650836,"share":0.07535276503596645,"share_pts":-0.01641228692658976,"eq":34.33,"eq_ya":54.0,"eq_vsya":-19.67,"price":43.57180308767842,"price_pct":0.12307037895917716,"acv":0.40480000000000005,"acv_pts":-0.22549999999999992,"stores":12.31,"vel":3695.2075098814225,"vel_pct":0.11171590684581711,"dps":121.51259138911453,"promo_any":0.0},{"rank":63,"brand":"BIG GROVE COLOR TV IPA","dol":1333.83,"dol_ya":0,"vsya":1333.83,"pct_vsya":0.0,"share":0.06719242862638763,"share_pts":0.06719242862638763,"eq":27.81,"eq_ya":0.0,"eq_vsya":27.81,"price":47.962243797195256,"price_pct":0.0,"acv":0.4131,"acv_pts":0.4131,"stores":53.96,"vel":3228.830791575889,"vel_pct":0.0,"dps":24.718865826538174,"promo_any":0.0},{"rank":81,"brand":"BIG GROVE SHADESHINE IPA","dol":645.76,"dol_ya":332.67,"vsya":313.09,"pct_vsya":0.9411428743198964,"share":0.03253051941385039,"share_pts":0.01795920820433479,"eq":43.28,"eq_ya":20.0,"eq_vsya":23.28,"price":14.920517560073936,"price_pct":-0.10298388432537142,"acv":0.1926,"acv_pts":0.009899999999999992,"stores":3.0,"vel":3352.8556593977155,"vel_pct":0.8413645022754157,"dps":215.25333333333333,"promo_any":0.0},{"rank":83,"brand":"BIG GROVE BOOMTOWN","dol":635.76,"dol_ya":470.6,"vsya":165.15999999999997,"pct_vsya":0.3509562260943475,"share":0.032026763848100735,"share_pts":0.011413967217211132,"eq":13.29,"eq_ya":10.0,"eq_vsya":3.289999999999999,"price":47.83747178329571,"price_pct":0.0165208623734745,"acv":0.25339999999999996,"acv_pts":0.04009999999999997,"stores":54.96,"vel":2508.918705603789,"vel_pct":0.13717033554034885,"dps":11.56768558951965,"promo_any":0.0},{"rank":114,"brand":"BIG GROVE CITRUS SURFER LM WHT","dol":98.91,"dol_ya":0,"vsya":98.91,"pct_vsya":0.0,"share":0.004982646300829941,"share_pts":0.004982646300829941,"eq":2.25,"eq_ya":0.0,"eq_vsya":2.25,"price":43.96,"price_pct":0.0,"acv":0.0416,"acv_pts":0.0416,"stores":1.0,"vel":2377.644230769231,"vel_pct":0.0,"dps":98.91,"promo_any":0.0},{"rank":132,"brand":"BIG GROVE SMR JM RSPBR BKBR AL","dol":47.96,"dol_ya":155.92,"vsya":-107.95999999999998,"pct_vsya":-0.6924063622370447,"share":0.0024160116933353956,"share_pts":-0.00441345547769798,"eq":0.67,"eq_ya":2.3333,"eq_vsya":-1.6633,"price":71.5820895522388,"price_pct":0.07120632088403545,"acv":0.0178,"acv_pts":-0.0566,"stores":1.0,"vel":2694.38202247191,"vel_pct":0.28567228368336406,"dps":47.96,"promo_any":0.0},{"rank":141,"brand":"BIG GROVE DBL BLKBRRY SOUR ALE","dol":35.97,"dol_ya":0,"vsya":35.97,"pct_vsya":0.0,"share":0.0018120087700015468,"share_pts":0.0018120087700015468,"eq":0.5,"eq_ya":0.0,"eq_vsya":0.5,"price":71.94,"price_pct":0.0,"acv":0.0184,"acv_pts":0.0184,"stores":1.0,"vel":1954.891304347826,"vel_pct":0.0,"dps":35.97,"promo_any":0.0},{"rank":145,"brand":"BIG GROVE EASY GOING SESSION IPA","dol":25.98,"dol_ya":0,"vsya":25.98,"pct_vsya":0.0,"share":0.0013087569598176309,"share_pts":0.0013087569598176309,"eq":0.5,"eq_ya":0.0,"eq_vsya":0.5,"price":51.96,"price_pct":0.0,"acv":0.0111,"acv_pts":0.0111,"stores":1.0,"vel":2340.5405405405404,"vel_pct":0.0,"dps":25.98,"promo_any":0.0}];
 const PKGS    = [{"pkg":"6PK CAN 12OZ","bgb_dol":330844.87000000005,"bgb_dol_ya":337929.54000000004,"bgb_vsya":-7084.669999999984,"bgb_eq":6708.629999999999,"bgb_acv":0.458634},{"pkg":"1PK CAN 19.2OZ","bgb_dol":80537.95999999999,"bgb_dol_ya":64083.99,"bgb_vsya":16453.969999999994,"bgb_eq":1381.1999999999998,"bgb_acv":0.33741},{"pkg":"12PK CAN 12OZ","bgb_dol":74338.38,"bgb_dol_ya":71231.17,"bgb_vsya":3107.2100000000064,"bgb_eq":1607.1599999999999,"bgb_acv":0.084192},{"pkg":"4PK CAN 16OZ","bgb_dol":645.76,"bgb_dol_ya":332.67,"bgb_vsya":313.09,"bgb_eq":43.28,"bgb_acv":0.001926},{"pkg":"4PK CAN 12OZ","bgb_dol":83.93,"bgb_dol_ya":292.81,"bgb_vsya":-208.88,"bgb_eq":1.17,"bgb_acv":0.000184}];
 
 const PORDER = ['Latest 4 Wks','Latest 13 Wks','Latest 26 Wks','Latest 52 Wks'];
@@ -294,7 +315,7 @@ let aPeriod = 'Latest 13 Wks';
 let selMkts = new Set(['IOWA CONV','IOWA XAOC CENSUS (NC)']);
 let aSeg = 'ALL';
 let aView = 'brand';
-let bSortC='dol', bSortD=-1, iSortC='dol', iSortD=-1;
+let bSortC='dol', bSortD=1, iSortC='dol', iSortD=1;
 let showDist=false, showVel=false, showPromo=false;
 
 // ── FORMATTERS ────────────────────────────────────────────────────────────────
@@ -310,6 +331,66 @@ const f$s = v => v==null?'—':(v>=0?'+$':'-$')+fD(Math.abs(v));
 const fp = v => v==null?'—':(v>=0?'+':''+(v*100).toFixed(1)+'%');
 const fa = v => v==null?'—':(v*100).toFixed(1)+'%';
 const fc = v => v==null?'mu':v>=0?'pos':'neg';
+
+
+// ── BGB BRAND CARDS ───────────────────────────────────────────────────────────
+function renderBgbCards() {
+  const f$ = v => v==null?'—':'$'+fD(v);
+  const fp = v => v==null?'—':(v>=0?'+':''+(v*100).toFixed(1)+'%');
+  const fc = v => v==null?'mu':v>=0?'pos':'neg';
+
+  const total = BGB_BRANDS.reduce((a,b)=>a+(b.dol||0),0);
+  const totalYa = BGB_BRANDS.reduce((a,b)=>a+(b.dol_ya||0),0);
+  const lbl = document.getElementById('bgbTotalLbl');
+  if(lbl) lbl.innerHTML = '<div style="font-size:9px;opacity:.7;margin-bottom:2px">Iowa Conv BGB Total</div><div>$'+fD(total)+'&nbsp;<span style="font-size:10px;color:'+(total>=totalYa?'#94bb36':'#ff7575')+';">'+(total>=totalYa?'+':'')+fD(total-totalYa)+' vs YA</span></div>';
+
+  // Period trend banner
+  const trend = TRENDS.find(t=>t.period===aPeriod);
+  const banner = document.getElementById('periodBanner');
+  if(banner && trend) {
+    const bgbPct = trend.bgb_pctch;
+    const mktPct = trend.mkt_pctch;
+    const fp2 = v => v==null?'—':(v>=0?'+':''+(v*100).toFixed(1)+'%');
+    banner.style.display='block';
+    banner.innerHTML = '<b>'+aPeriod+':</b>&nbsp;&nbsp;'
+      +'BGB <span style="color:'+(bgbPct>=0?'#94bb36':'#ff7575')+';font-weight:800">'+fp2(bgbPct)+'</span> vs YA'
+      +'&nbsp;&nbsp;·&nbsp;&nbsp;Iowa Conv Market <span style="color:'+(mktPct>=0?'#94bb36':'#ff7575')+'">'+fp2(mktPct)+'</span> vs YA'
+      +'&nbsp;&nbsp;·&nbsp;&nbsp;<span style="opacity:.65">Brand cards are Latest 13 Wks · trend % reflects selected period</span>';
+  }
+
+  document.getElementById('bgbCards').innerHTML = BGB_BRANDS.map(b => {
+    const pct = b.pct_vsya;
+    const cls = fc(pct);
+    const shortName = b.brand.replace('BIG GROVE ','');
+    return `<div class="gcd" style="cursor:default" 
+      onmouseenter="showTT(event,${JSON.stringify(b).replace(/"/g,'&quot;')})"
+      onmouseleave="hideTT()">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:9.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${shortName}</div>
+        <div style="font-size:9.5px;font-weight:800;color:var(--muted);background:var(--border);padding:1px 6px;border-radius:10px">#${b.rank}</div>
+      </div>
+      <div style="font-size:19px;font-weight:800;color:var(--navy)">${f$(b.dol)}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span class="${cls}" style="font-size:11px;font-weight:800">${fp(pct)}</span>
+        <span style="font-size:10px;color:var(--muted);font-weight:600">${fp(b.pct_vsya)} vs YA</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid var(--border)">
+        <div style="text-align:center">
+          <div style="font-size:9px;color:var(--muted);font-weight:700">ACV%</div>
+          <div style="font-size:11px;font-weight:800">${b.acv!=null?(b.acv).toFixed(1)+'%':'—'}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:9px;color:var(--muted);font-weight:700">Stores</div>
+          <div style="font-size:11px;font-weight:800">${b.stores!=null?fD(b.stores):'—'}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:9px;color:var(--muted);font-weight:700">$/Store</div>
+          <div style="font-size:11px;font-weight:800">${b.dps!=null?'$'+fD(b.dps):'—'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function init(){
@@ -331,7 +412,7 @@ function renderPP(){
     </div>`;
   }).join('');
 }
-function setPeriod(p){ aPeriod=p; document.getElementById('pChip').textContent=p; renderPP(); renderKPIs(); }
+function setPeriod(p){ aPeriod=p; document.getElementById('pChip').textContent=p; renderPP(); renderKPIs(); renderBgbCards(); }
 
 // ── MARKETS ───────────────────────────────────────────────────────────────────
 function renderML(){
@@ -348,7 +429,7 @@ function renderML(){
 function toggleMkt(m){
   if(selMkts.has(m)) selMkts.delete(m); else selMkts.add(m);
   if(selMkts.size===0) selMkts.add(m);
-  renderML(); renderKPIs(); renderGeog();
+  renderML(); renderKPIs(); renderGeog(); if(document.getElementById('view-brand').classList.contains('on')) renderBgbCards();
 }
 
 // ── SEGMENT ───────────────────────────────────────────────────────────────────
@@ -410,7 +491,7 @@ function renderBrands(){
   const vc=cols.filter(c=>c.a||(c.d&&showDist)||(c.v&&showVel)||(c.p&&showPromo));
 
   document.getElementById('bHead').innerHTML='<tr>'+vc.map(c=>{
-    const sc=bSortC===c.k?(bSortD===-1?'sd':'sa'):'';
+    const sc=bSortC===c.k?(bSortD===1?'sd':'sa'):'';
     return `<th class="${sc}" onclick="sortB('${c.k}')">${c.l}</th>`;
   }).join('')+'</tr>';
 
@@ -434,7 +515,7 @@ function renderBrands(){
     }).join('')}
     </tr>`).join('');
 }
-function sortB(c){ if(bSortC===c)bSortD*=-1; else{bSortC=c;bSortD=-1;} renderBrands(); }
+function sortB(c){ if(bSortC===c)bSortD*=-1; else{bSortC=c;bSortD=1;} renderBrands(); }
 
 // ── ITEM TABLE ────────────────────────────────────────────────────────────────
 function renderItems(){
@@ -454,7 +535,7 @@ function renderItems(){
   const vc=cols.filter(c=>c.a||(c.d&&showDist)||(c.v&&showVel)||(c.p&&showPromo));
 
   document.getElementById('iHead').innerHTML='<tr>'+vc.map(c=>{
-    const sc=iSortC===c.k?(iSortD===-1?'sd':'sa'):'';
+    const sc=iSortC===c.k?(iSortD===1?'sd':'sa'):'';
     return`<th class="${sc}" onclick="sortI('${c.k}')">${c.l}</th>`;
   }).join('')+'</tr>';
 
@@ -477,7 +558,7 @@ function renderItems(){
     }).join('')}
     </tr>`).join('');
 }
-function sortI(c){ if(iSortC===c)iSortD*=-1; else{iSortC=c;iSortD=-1;} renderItems(); }
+function sortI(c){ if(iSortC===c)iSortD*=-1; else{iSortC=c;iSortD=1;} renderItems(); }
 
 // ── TOGGLES ───────────────────────────────────────────────────────────────────
 function renderTgls(id){
